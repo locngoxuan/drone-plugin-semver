@@ -1,11 +1,11 @@
 def main(ctx):
     stages = [
-        linux(ctx, "amd64","1.2.0"),
-        linux(ctx, "arm64","1.2.0"),
-        linux(ctx, "arm","1.2.0"),
+        linux(ctx, "amd64","1.3.0"),
+        linux(ctx, "arm64","1.3.0"),
+        linux(ctx, "arm","1.3.0"),
     ]
 
-    after = manifest(ctx)
+    after = manifest(ctx, "1.3.0")
 
     for s in stages:
         for a in after:
