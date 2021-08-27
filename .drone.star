@@ -5,7 +5,69 @@ def main(ctx):
         linux(ctx, "arm","1.2.0"),
     ]
 
-    return stages
+    after = manifest(ctx)
+
+    for s in stages:
+        for a in after:
+            a["depends_on"].append(s["name"])
+
+    return stages + manifest
+
+def manifest(ctx, version){
+    return [{
+        "kind": "pipeline",
+        "type": "docker",
+        "name": "manifest-%s" % (version),
+        "steps": [{
+            "name":"manifest",
+            "image":"plugins/manifest",
+            "settings": {
+                "target": "xuanloc0511/drone-plugin-semver:%s" % (version),
+                "template": "xuanloc0511/drone-plugin-semver:%s-OS-ARCH" % (version),
+                "username": {
+                    "from_secret": "docker_username",
+                },
+                "password": {
+                    "from_secret": "docker_password",
+                },
+                "platforms":["linux/amd64","linux/arm","linux/arm64"],
+            },            
+        }],
+        "depends_on": [],
+        "trigger": {
+            "ref": [
+                "refs/heads/main",
+                "refs/tags/**",
+            ],
+        },
+    },{
+        "kind": "pipeline",
+        "type": "docker",
+        "name": "manifest-latest",
+        "steps": [{
+            "name":"manifest",
+            "image":"plugins/manifest",
+            "settings": {
+                "target": "xuanloc0511/drone-plugin-semver:latest",
+                "template": "xuanloc0511/drone-plugin-semver:latest-OS-ARCH",
+                "username": {
+                    "from_secret": "docker_username",
+                },
+                "password": {
+                    "from_secret": "docker_password",
+                },
+                "platforms":["linux/amd64","linux/arm","linux/arm64"],
+            },            
+        }],
+        "depends_on": [],
+        "trigger": {
+            "ref": [
+                "refs/heads/main",
+                "refs/tags/**",
+            ],
+        },
+    }]
+}
 
 def linux(ctx, arch, version):
     build = [
