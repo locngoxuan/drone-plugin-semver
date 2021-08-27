@@ -37,7 +37,7 @@ def linux(ctx, arch, version):
             "name": "executable",
             "image": "golang:1.16.7",
             "commands": [
-                "./release/linux/%s/docker --help" % (arch),
+                "./release/linux/%s/semver --help" % (arch),
             ],
         },
     ]
