@@ -13,7 +13,7 @@ def main(ctx):
 
     return stages + manifest
 
-def manifest(ctx, version){
+def manifest(ctx, version):
     return [{
         "kind": "pipeline",
         "type": "docker",
@@ -67,7 +67,6 @@ def manifest(ctx, version){
             ],
         },
     }]
-}
 
 def linux(ctx, arch, version):
     build = [
