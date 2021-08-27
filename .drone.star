@@ -11,7 +11,7 @@ def main(ctx):
         for a in after:
             a["depends_on"].append(s["name"])
 
-    return stages + manifest
+    return stages + after
 
 def manifest(ctx, version):
     return [{
@@ -30,7 +30,11 @@ def manifest(ctx, version):
                 "password": {
                     "from_secret": "docker_password",
                 },
-                "platforms":["linux/amd64","linux/arm","linux/arm64"],
+                "platforms":[
+                    "linux/amd64",
+                    "linux/arm",
+                    "linux/arm64",
+                ],
             },            
         }],
         "depends_on": [],
@@ -56,7 +60,11 @@ def manifest(ctx, version):
                 "password": {
                     "from_secret": "docker_password",
                 },
-                "platforms":["linux/amd64","linux/arm","linux/arm64"],
+                "platforms":[
+                    "linux/amd64",
+                    "linux/arm",
+                    "linux/arm64",
+                ],
             },            
         }],
         "depends_on": [],
