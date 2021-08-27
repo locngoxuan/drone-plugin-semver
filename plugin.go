@@ -119,10 +119,18 @@ func toVersion(numbers map[string]string, prerelease, buildmetadata, buildNumber
 
 func (p Plugin) Exec() error {
 	m, err := readVersionFile(p.Config.Src)
+	if err != nil {
+		return err
+	}
 	version := m["version"]
 	prerelease := m["prerelease"]
 	buildmetadata := m["buildmetadata"]
 	if !semverReg.MatchString(fmt.Sprintf("%s-%s-%s", version, prerelease, buildmetadata)) {
+		fmt.Println("=== VERSION ===")
+		fmt.Println("src:", p.Config.Src)
+		fmt.Println("version:", version)
+		fmt.Println("prerelease:", prerelease)
+		fmt.Println("buildmetadata:", buildmetadata)
 		return fmt.Errorf(`version %s is wrong. please see https://semver.org/`, fmt.Sprintf("%s-%s-%s", version, prerelease, buildmetadata))
 	}
 
