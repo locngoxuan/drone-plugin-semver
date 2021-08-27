@@ -40,7 +40,7 @@ func (v Version) nextPatch() string {
 }
 
 func (v Version) devVersion() string {
-	return fmt.Sprintf("%d.%d.%d-%s-%s", v.Major, v.Minor, v.Patch+1, v.PreRelease, v.BuildMetadata)
+	return fmt.Sprintf("%d.%d.%d-%s-%s", v.Major, v.Minor, v.Patch, v.PreRelease, v.BuildMetadata)
 }
 
 type Config struct {
