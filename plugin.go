@@ -40,7 +40,7 @@ func (v Version) nextPatch() string {
 }
 
 func (v Version) devVersion() string {
-	return fmt.Sprintf("%d.%d.%d-%s-%s", v.Major, v.Minor, v.Patch, v.PreRelease, v.BuildMetadata)
+	return fmt.Sprintf("%d.%d.%d-%s+%s", v.Major, v.Minor, v.Patch, v.PreRelease, v.BuildMetadata)
 }
 
 type Config struct {
@@ -49,8 +49,7 @@ type Config struct {
 	Action string
 
 	DroneBuildNumber string
-	DroneBuildRef    string
-	DroneBuildBranch string
+	RequireAction    bool
 }
 
 type Plugin struct {
@@ -112,7 +111,7 @@ func toVersion(numbers map[string]string, prerelease, buildmetadata, buildNumber
 	if strings.TrimSpace(buildmetadata) == "" {
 		v.BuildMetadata = buildNumber
 	} else {
-		v.BuildMetadata = fmt.Sprintf("%s.%s", v.BuildMetadata, buildNumber)
+		v.BuildMetadata = fmt.Sprintf("%s+%s", v.BuildMetadata, buildNumber)
 	}
 	return
 }

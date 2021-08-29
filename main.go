@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/joho/godotenv"
 	"github.com/urfave/cli"
@@ -29,6 +31,11 @@ func main() {
 			Usage:  "specify versioning action", //release, patch
 			EnvVar: "PLUGIN_ACTION",
 		},
+		cli.BoolFlag{
+			Name:   "require-action",
+			Usage:  "return error if action is empty", //release, patch
+			EnvVar: "PLUGIN_REQUIRE_ACTION",
+		},
 		cli.StringSliceFlag{
 			Name:   "output",
 			Usage:  "specify output of semver",
@@ -49,9 +56,13 @@ func run(c *cli.Context) error {
 			Action:           c.String("action"),
 			Output:           c.StringSlice("output"),
 			DroneBuildNumber: os.Getenv("DRONE_BUILD_NUMBER"),
-			DroneBuildRef:    os.Getenv("DRONE_COMMIT_REF"),
-			DroneBuildBranch: os.Getenv("DRONE_COMMIT_BRANCH"),
+			RequireAction:    c.Bool("require-action"),
 		},
+	}
+	if strings.TrimSpace(plugin.Config.Action) == "" {
+		if plugin.Config.RequireAction {
+			return fmt.Errorf(`action must not empty`)
+		}
 	}
 	return plugin.Exec()
 }
