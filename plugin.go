@@ -57,7 +57,7 @@ type Plugin struct {
 }
 
 const (
-	extractVersion = `^(?P<major>0|[1-9]+)\.(?P<minor>0|[1-9]+)\.(?P<patch>0|[1-9]+)?$`
+	extractVersion = `^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)?$`
 	semverPattern  = `^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$`
 )
 
@@ -89,14 +89,17 @@ func readVersionFile(file string) (map[string]string, error) {
 func toVersion(numbers map[string]string, prerelease, buildmetadata, buildNumber string) (v Version, err error) {
 	v.Major, err = strconv.Atoi(numbers["major"])
 	if err != nil {
+		err = fmt.Errorf("failed to read major %v", err)
 		return
 	}
 	v.Minor, err = strconv.Atoi(numbers["minor"])
 	if err != nil {
+		err = fmt.Errorf("failed to read minor %v", err)
 		return
 	}
 	v.Patch, err = strconv.Atoi(numbers["patch"])
 	if err != nil {
+		err = fmt.Errorf("failed to read patch %v", err)
 		return
 	}
 	v.PreRelease = prerelease
