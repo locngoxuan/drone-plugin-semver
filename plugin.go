@@ -28,7 +28,7 @@ func (v Version) currentRelease() string {
 }
 
 func (v Version) nextRelease() string {
-	return fmt.Sprintf("%d.%d.0", v.Major, v.Minor)
+	return fmt.Sprintf("%d.%d.0", v.Major, v.Minor+1)
 }
 
 func (v Version) currentPatch() string {

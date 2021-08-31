@@ -53,7 +53,7 @@ func run(c *cli.Context) error {
 	plugin := &Plugin{
 		Config: Config{
 			Src:              "VERSION",
-			Action:           c.String("action"),
+			Action:           strings.TrimSpace(c.String("action")),
 			Output:           c.StringSlice("output"),
 			DroneBuildNumber: os.Getenv("DRONE_BUILD_NUMBER"),
 			RequireAction:    c.Bool("require-action"),
@@ -64,5 +64,8 @@ func run(c *cli.Context) error {
 			return fmt.Errorf(`action must not empty`)
 		}
 	}
+	fmt.Println("action: ", plugin.Config.Action)
+	fmt.Println("build number: ", plugin.Config.DroneBuildNumber)
+	fmt.Println("output: ", plugin.Config.Output)
 	return plugin.Exec()
 }
