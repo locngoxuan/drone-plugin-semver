@@ -1,5 +1,5 @@
 def main(ctx):
-    version = "1.1.4"
+    version = "1.2.0"
 
     stages = [
         linux(ctx, "amd64",version),

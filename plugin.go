@@ -21,6 +21,7 @@ type Version struct {
 	Patch         int
 	PreRelease    string
 	BuildMetadata string
+	PreBuildMeta  string
 }
 
 func (v Version) currentRelease() string {
@@ -40,14 +41,14 @@ func (v Version) nextPatch() string {
 }
 
 func (v Version) devVersion() string {
-	return fmt.Sprintf("%d.%d.%d-%s+%s", v.Major, v.Minor, v.Patch, v.PreRelease, v.BuildMetadata)
+	return fmt.Sprintf("%d.%d.%d-%s%s%s", v.Major, v.Minor, v.Patch, v.PreRelease, v.PreBuildMeta, v.BuildMetadata)
 }
 
 type Config struct {
-	Src    string
-	Output []string
-	Action string
-
+	Src              string
+	Output           []string
+	Action           string
+	PreBuildMetadata string
 	DroneBuildNumber string
 	RequireAction    bool
 }
@@ -86,7 +87,8 @@ func readVersionFile(file string) (map[string]string, error) {
 	return result, nil
 }
 
-func toVersion(numbers map[string]string, prerelease, buildmetadata, buildNumber string) (v Version, err error) {
+func toVersion(numbers map[string]string, prerelease, buildmetadata, buildNumber, premeta string) (v Version, err error) {
+	v.PreBuildMeta = premeta
 	v.Major, err = strconv.Atoi(numbers["major"])
 	if err != nil {
 		err = fmt.Errorf("failed to read major %v", err)
@@ -114,7 +116,7 @@ func toVersion(numbers map[string]string, prerelease, buildmetadata, buildNumber
 	if strings.TrimSpace(buildmetadata) == "" {
 		v.BuildMetadata = buildNumber
 	} else {
-		v.BuildMetadata = fmt.Sprintf("%s+%s", v.BuildMetadata, buildNumber)
+		v.BuildMetadata = fmt.Sprintf("%s%s%s", v.BuildMetadata, v.PreBuildMeta, buildNumber)
 	}
 	return
 }
@@ -148,7 +150,7 @@ func (p Plugin) Exec() error {
 		}
 	}
 
-	v, err := toVersion(verNumbers, prerelease, buildmetadata, p.Config.DroneBuildNumber)
+	v, err := toVersion(verNumbers, prerelease, buildmetadata, p.Config.DroneBuildNumber, p.Config.PreBuildMetadata)
 	if err != nil {
 		return err
 	}

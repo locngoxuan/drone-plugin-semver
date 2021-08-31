@@ -42,6 +42,12 @@ func main() {
 			Value:  &cli.StringSlice{".drone.semver"},
 			EnvVar: "PLUGIN_OUTPUT",
 		},
+		cli.StringFlag{
+			Name:   "pre_buildmetadata",
+			Usage:  "specify character before buildmetadata",
+			Value:  "+",
+			EnvVar: "PLUGIN_PRE_BUILDMETADATA",
+		},
 	}
 
 	if err := app.Run(os.Args); err != nil {
@@ -55,6 +61,7 @@ func run(c *cli.Context) error {
 			Src:              "VERSION",
 			Action:           strings.TrimSpace(c.String("action")),
 			Output:           c.StringSlice("output"),
+			PreBuildMetadata: strings.TrimSpace(c.String("pre_buildmetadata")),
 			DroneBuildNumber: os.Getenv("DRONE_BUILD_NUMBER"),
 			RequireAction:    c.Bool("require_action"),
 		},
@@ -65,8 +72,9 @@ func run(c *cli.Context) error {
 		}
 	}
 	fmt.Println("action: ", plugin.Config.Action)
-	fmt.Println("build number: ", plugin.Config.DroneBuildNumber)
+	fmt.Println("build-number: ", plugin.Config.DroneBuildNumber)
 	fmt.Println("output: ", plugin.Config.Output)
-	fmt.Println("require_action: ", plugin.Config.RequireAction)
+	fmt.Println("require-action: ", plugin.Config.RequireAction)
+	fmt.Println("pre-buildmetadata", plugin.Config.PreBuildMetadata)
 	return plugin.Exec()
 }
