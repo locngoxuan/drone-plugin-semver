@@ -32,7 +32,7 @@ func main() {
 			EnvVar: "PLUGIN_ACTION",
 		},
 		cli.BoolFlag{
-			Name:   "require-action",
+			Name:   "require_action",
 			Usage:  "return error if action is empty", //release, patch
 			EnvVar: "PLUGIN_REQUIRE_ACTION",
 		},
@@ -56,7 +56,7 @@ func run(c *cli.Context) error {
 			Action:           strings.TrimSpace(c.String("action")),
 			Output:           c.StringSlice("output"),
 			DroneBuildNumber: os.Getenv("DRONE_BUILD_NUMBER"),
-			RequireAction:    c.Bool("require-action"),
+			RequireAction:    c.Bool("require_action"),
 		},
 	}
 	if strings.TrimSpace(plugin.Config.Action) == "" {
@@ -67,6 +67,6 @@ func run(c *cli.Context) error {
 	fmt.Println("action: ", plugin.Config.Action)
 	fmt.Println("build number: ", plugin.Config.DroneBuildNumber)
 	fmt.Println("output: ", plugin.Config.Output)
-	fmt.Println("require-action: ", plugin.Config.RequireAction)
+	fmt.Println("require_action: ", plugin.Config.RequireAction)
 	return plugin.Exec()
 }
