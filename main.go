@@ -67,5 +67,6 @@ func run(c *cli.Context) error {
 	fmt.Println("action: ", plugin.Config.Action)
 	fmt.Println("build number: ", plugin.Config.DroneBuildNumber)
 	fmt.Println("output: ", plugin.Config.Output)
+	fmt.Println("require-action: ", plugin.Config.RequireAction)
 	return plugin.Exec()
 }
